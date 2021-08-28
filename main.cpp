@@ -3,6 +3,7 @@
 #include <filesystem>
 
 #include "storage.hpp"
+#include "route_guide.grpc.pb.h"
 #include "db_config.h"
 
 int main() {
