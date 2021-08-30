@@ -65,11 +65,20 @@ else()
   endif()
 endif()
 
-# Add proto dir
-add_subdirectory(protos)
+# Libuuid supports
+find_path(LIBUUID_INCLUDE_DIR uuid.h PATH_SUFFIXES uuid)
+find_library(LIBUUID_LIBRARY libuuid.a)
 
-# Add lib subdir
+# Add subdirs with nested cmake files
+add_subdirectory(protos)
+add_subdirectory(raft)
 add_subdirectory(storage)
+
+# Builds and links the testing components
+option(BUILD_TESTS "Include the test packages in the build" ON)
+if(BUILD_TESTS)
+ add_subdirectory(tests)
+endif()
 
 # Set up version in project
 configure_file(db_config.h.in db_config.h)
@@ -79,11 +88,16 @@ add_executable(Database main.cpp)
 # Link lib
 target_link_libraries(Database PUBLIC
   Storage
+  Raft
   ${_GRPC_GRPCPP}
   ${DATABASE_PROTO}
+  ${LIBUUID_LIBRARY}
   )
 
 target_include_directories(Database PUBLIC
                            "${PROJECT_BINARY_DIR}"
+                           "${PROJECT_BINARY_DIR}/protos"
                            "${PROJECT_SOURCE_DIR}/storage"
+                           "${PROJECT_SOURCE_DIR}/raft"
                            )
+target_include_directories(Database PRIVATE ${LIBUUID_INCLUDE_DIR})
