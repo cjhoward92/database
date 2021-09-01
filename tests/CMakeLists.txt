@@ -1,3 +1,4 @@
+# Fetch the Catch2 test framework
 include(FetchContent)
 FetchContent_Declare(
   Catch2
@@ -7,16 +8,21 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(tests test.cpp)
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain Storage Raft ${LIBUUID_LIBRARY})
-target_include_directories(tests PRIVATE
-                            "${PROJECT_BINARY_DIR}"
-                            "${PROJECT_BINARY_DIR}/protos"
-                            "${PROJECT_SOURCE_DIR}/storage"
-                            "${PROJECT_SOURCE_DIR}/raft"
+# Build the unit test executable
+add_executable(UnitTests test.cpp)
+
+# Link in Catch2 + the source libraries
+target_link_libraries(UnitTests PRIVATE Catch2::Catch2WithMain Storage Raft ${LIBUUID_LIBRARY})
+
+# Link in the src header files
+target_include_directories(UnitTests PRIVATE
+                            "${DB_BIN_DIR}"
+                            "${DB_BIN_DIR}/protos"
+                            "${DB_SRC_DIR}/storage"
+                            "${DB_SRC_DIR}/raft"
                             ${LIBUUID_INCLUDE_DIR})
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(CTest)
 include(Catch)
-catch_discover_tests(tests)
+catch_discover_tests(UnitTests)
