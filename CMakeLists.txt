@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.21.1)
 
 # Set project name
-project(Database VERSION 0.1)
+project(Database VERSION 0.1 LANGUAGES C CXX)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 set(DB_BIN_DIR "${PROJECT_BINARY_DIR}/src")

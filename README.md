@@ -19,7 +19,7 @@ Make sure you have at least `cmake` version `3.21.1` installed. Create a build f
 ```bash
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
 Build the executable:
@@ -29,6 +29,9 @@ cmake --build .
 ```
 
 Done!
+
+If you want to build in debug mode, simply change the build type
+from `Release` to `Debug` when configuring cmake.
 
 ## Tutorials
 
