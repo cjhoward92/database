@@ -1,6 +1,10 @@
 #include <iostream>
 #include <compare>
 #include <filesystem>
+#include <cstdio>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include "storage.h"
 #include "block.h"
@@ -12,15 +16,32 @@ int main() {
     std::cout << "Hello world!" << std::endl;
     std::cout << "Version: " << Database_VERSION_MAJOR << "." << Database_VERSION_MINOR << std::endl;
 
-    auto cwd = std::filesystem::current_path() / "Database";
-    std::cout << "Found file: " << cwd.filename() << std::endl;
+    char *filename = "/tmp/test-db";
+    int fd = open(filename, O_CREAT | O_RDWR, 0777);
+    if (fd < 0) {
+        std:std::cerr << "Error: " << fd << std::endl;
+        return -1;
+    }
 
-    uintmax_t fsz = file_len(cwd.c_str());
+    std::cout << "Found file: " << filename << std::endl;
+
+    uintmax_t fsz = file_len(filename);
     std::cout << "File size: " << fsz << std::endl;
 
-    BlockReader reader(0, 0);
+    BlockWriter writer(fd, 0);
 
-    std::cout << "FD: " << reader.GetFileDescriptor() << std::endl;
+    char buf[1024];
+    for (int i = 0; i < 1024; i++) {
+        buf[i] = 'a';
+    }
+
+    writer.Write(buf, 1024);
+
+    fsz = file_len(filename);
+    std::cout << "File size: " << fsz << std::endl;
+
+    close(fd);
+    // unlink(filename);
 
     return 0;
 }

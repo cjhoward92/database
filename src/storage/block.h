@@ -1,7 +1,11 @@
 #ifndef __BLOCK__
 #define __BLOCK__
 
+#include <iostream>
+#include <cstring>
 #include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 
 namespace database {
 
@@ -21,6 +25,20 @@ private:
     int _fd;
     off_t _offset;
 };
+
+class BlockWriter {
+public:
+    explicit BlockWriter(int fd, off_t offset): _fd(fd), _offset(offset) {}
+    ~BlockWriter() {}
+
+    int GetFileDescriptor() const;
+    size_t Write(char *data, ssize_t len);
+
+private:
+    int _fd;
+    off_t _offset;
+};
+
 } // end namespace
 
 #endif

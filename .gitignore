@@ -2,3 +2,6 @@ build/
 out/
 dist/
 grpc-src/
+.idea/
+cmake-build-debug/
+cmake-build*
