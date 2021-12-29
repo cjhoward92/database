@@ -1,7 +1,4 @@
 #include <iostream>
-#include <compare>
-#include <filesystem>
-#include <cstdio>
 #include <unistd.h>
 #include <fcntl.h>
 
