@@ -68,7 +68,7 @@ add_subdirectory(storage)
 # Set up version in project
 configure_file(db_config.h.in db_config.h)
 
-add_executable(Database main.cpp)
+add_executable(Database main.cpp port/port.h port/port_linux.cpp)
 
 # Link lib
 target_link_libraries(Database PUBLIC

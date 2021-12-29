@@ -2,13 +2,13 @@
 #include <compare>
 #include <filesystem>
 #include <cstdio>
-#include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
 
 #include "storage.h"
 #include "block.h"
 #include "db_config.h"
+#include "port/port.h"
 
 using namespace database;
 
@@ -16,20 +16,23 @@ int main() {
     std::cout << "Hello world!" << std::endl;
     std::cout << "Version: " << Database_VERSION_MAJOR << "." << Database_VERSION_MINOR << std::endl;
 
-    char *filename = "/tmp/test-db";
+    const char *filename = "/tmp/test-db";
     int fd = open(filename, O_CREAT | O_RDWR, 0777);
     if (fd < 0) {
         std::cerr << "Error: " << fd << std::endl;
         return -1;
     }
+    close(fd);
 
     std::cout << "Found file: " << filename << std::endl;
 
     uintmax_t fsz = file_len(filename);
     std::cout << "File size: " << fsz << std::endl;
 
-    BlockWriter writer(fd, 0);
-    BlockWriter writer2(fd, BLOCK_SIZE);
+    File file(filename);
+
+    BlockWriter writer(&file, 0);
+    BlockWriter writer2(&file, BLOCK_SIZE);
 
     char buf[5000];
     for (int i = 0; i < 5000; i++) {
@@ -42,7 +45,18 @@ int main() {
     fsz = file_len(filename);
     std::cout << "File size: " << fsz << std::endl;
 
-    close(fd);
+    BlockReader reader(&file, 0);
+
+    char readBuffer[BLOCK_SIZE];
+
+    reader.Read(readBuffer, BLOCK_SIZE);
+
+    std::cout << "Buffer: ";
+    for (char i : readBuffer) {
+        std::cout << i;
+    }
+    std::cout << std::endl;
+
     unlink(filename);
 
     return 0;

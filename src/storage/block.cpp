@@ -1,22 +1,16 @@
 #include "block.h"
 
+#include <cstring>
+
 using namespace database;
 
-int BlockReader::GetFileDescriptor() const {
-    return this->_fd;
+ssize_t BlockReader::Read(char *buf, size_t length) {
+    return this->_file->Read(buf, length, this->_offset);
 }
 
-off_t BlockReader::GetOriginalOffset() const {
-    return this->_offset;
-}
-
-int BlockWriter::GetFileDescriptor() const {
-    return this->_fd;
-}
-
-size_t BlockWriter::Write(char *data, ssize_t len) {
-    if (data == nullptr) {
-        return -1;
+size_t BlockWriter::Write(char *data, size_t len) {
+    if (data == nullptr || len < 1) {
+        throw std::invalid_argument("A buffer is required and len must be greater than 0.");
     }
 
     // We need to normalize to the size of the block!
@@ -30,9 +24,5 @@ size_t BlockWriter::Write(char *data, ssize_t len) {
         std::memcpy(buf, data, BLOCK_SIZE);
     }
 
-    if (lseek(this->_fd, this->_offset, SEEK_SET) < 0) {
-        return -1;
-    }
-
-    return write(this->_fd, buf, BLOCK_SIZE);
+    return this->_file->Write(buf, BLOCK_SIZE, this->_offset);
 }
