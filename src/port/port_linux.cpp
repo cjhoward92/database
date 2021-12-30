@@ -6,9 +6,14 @@
 
 #include <fcntl.h>
 #include <unistd.h>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 
 using namespace database;
 
+// TODO: Do we just switch to use <filesystem> and <fstream>?
+// We might be able to avoid "port" for files if we use those two.
 void File::Open() {
     if (this->_isOpen) {
         return;
@@ -102,7 +107,30 @@ int File::GetFileDescriptor() const {
     return this->_fd;
 }
 
-// TODO: Prevent a copy?
+// TODO: Prevent a copy? Does this copy by default? I guess I don't know.
 std::string File::GetFilename() const {
     return this->_filename;
+}
+
+File * File::CreateOrOpen(const std::filesystem::path& path) {
+    if (!std::filesystem::exists(path)) {
+        // TODO: Change mode?
+        auto output = creat(path.c_str(), 0666);
+        if (output < 0) {
+            throw std::runtime_error("Could not create file " + path.string());
+        }
+        close(output);
+    }
+
+    File *file = new File(path);
+    file->Open();
+    return file;
+}
+
+void File::Create(const std::filesystem::path& filename) {
+    auto output = open(filename.c_str(), O_CREAT | O_RDWR, 0666);
+    if (output < 0) {
+        throw std::runtime_error("Could not create file " + filename.string());
+    }
+    close(output);
 }

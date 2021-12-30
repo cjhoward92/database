@@ -1,13 +1,22 @@
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
+#include <filesystem>
+#include <string>
 
 #include "storage.h"
 #include "block.h"
 #include "db_config.h"
 #include "port/port.h"
+#include "core/db.h"
 
 using namespace database;
+
+void CreateDb() {
+    std::filesystem::path dbPath("/tmp/database");
+    Db db;
+    db.Init(dbPath);
+}
 
 int main() {
     std::cout << "Hello world!" << std::endl;
@@ -55,6 +64,8 @@ int main() {
     std::cout << std::endl;
 
     unlink(filename);
+
+    CreateDb();
 
     return 0;
 }

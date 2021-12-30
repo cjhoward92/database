@@ -8,6 +8,7 @@
 #include <string>
 #include <stdexcept>
 #include <utility>
+#include <filesystem>
 
 namespace database {
 
@@ -31,6 +32,9 @@ public:
 
     [[nodiscard]] int GetFileDescriptor() const;
     [[nodiscard]] std::string GetFilename() const;
+
+    static File* CreateOrOpen(const std::filesystem::path& filename);
+    static void Create(const std::filesystem::path& filename);
 
 private:
     int _fd;
