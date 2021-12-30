@@ -2,6 +2,13 @@
 // Created by carson on 12/29/21.
 //
 
+/**
+ * This file represents the main database implementation. It's the class
+ * that represents a database in its entirety. The file structure is as follows:
+ *
+ * <root>/options.db - The database options config file
+ */
+
 #include "db.h"
 #include "../port/port.h"
 
@@ -10,7 +17,7 @@
 
 using namespace database;
 
-void Db::Init(const std::filesystem::path baseDir) {
+void Db::Init(const std::filesystem::path& baseDir) {
     bool exists = std::filesystem::exists(baseDir);
 
     if (exists && !std::filesystem::is_directory(baseDir)) {

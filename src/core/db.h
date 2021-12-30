@@ -18,7 +18,7 @@ namespace database {
         Db() = default;
         ~Db() = default;
 
-        void Init(const std::filesystem::path baseDir);
+        void Init(const std::filesystem::path& baseDir);
 
     private:
         std::filesystem::path _baseDir;
