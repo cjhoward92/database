@@ -7,6 +7,7 @@
  * that represents a database in its entirety. The file structure is as follows:
  *
  * <root>/options.db - The database options config file
+ * <root>/tables/<table_name>.db
  */
 
 #include "db.h"

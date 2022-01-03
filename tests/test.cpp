@@ -1,7 +1,13 @@
-#include <catch2/catch_test_macros.hpp>
-#include "state.h"
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
 
-TEST_CASE("Generates a raft id", "[raft]") {
-    raft::initialize_raft_id();
-    REQUIRE(raft::get_raft_id().size() > 0);
+#include "port.h"
+
+using namespace database;
+
+TEST_CASE("Creates a file", "[port]") {
+    std::filesystem::path tmpPath("/tmp/test-db-file");
+    File::Create(tmpPath);
+    assert(std::filesystem::exists(tmpPath));
+    unlink(tmpPath.c_str());
 }

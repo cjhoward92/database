@@ -4,7 +4,6 @@
 #include <filesystem>
 #include <string>
 
-#include "storage.h"
 #include "block.h"
 #include "db_config.h"
 #include "port/port.h"
@@ -32,7 +31,7 @@ int main() {
 
     std::cout << "Found file: " << filename << std::endl;
 
-    uintmax_t fsz = file_len(filename);
+    uintmax_t fsz = std::filesystem::file_size(filename);
     std::cout << "File size: " << fsz << std::endl;
 
     File file(filename);
@@ -48,7 +47,7 @@ int main() {
     writer.Write(buf, 1024);
     writer2.Write(buf, 1024);
 
-    fsz = file_len(filename);
+    fsz = std::filesystem::file_size(filename);
     std::cout << "File size: " << fsz << std::endl;
 
     BlockReader reader(&file, 0);

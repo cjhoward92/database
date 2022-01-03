@@ -1,1 +1,1 @@
-add_library(Storage storage.cpp block.cpp)
+add_library(Storage block.cpp)

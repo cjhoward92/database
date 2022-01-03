@@ -14,5 +14,16 @@ find_package(Threads REQUIRED)
 set(DB_BIN_DIR "${PROJECT_BINARY_DIR}/src")
 set(DB_SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 
+# included so CLion would be nice?
+include_directories(
+        SYSTEM
+        "./src/port"
+        "./src/storage"
+        "./src/core"
+)
+
 add_subdirectory(src)
 add_subdirectory(tests)
+
+add_custom_target(WithTests)
+add_dependencies(WithTests Storage Port Core Database UnitTests)
